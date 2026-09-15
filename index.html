@@ -17,7 +17,7 @@
         .page-section { display: none; }
         .page-section.active { display: block; }
 
-        .dakji-hero { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; border: 2px solid var(--main-green); }
+        .dakji-hero { max-width: 520px; margin: 30px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; border: 2px solid var(--main-green); }
         .option-card { background: #f9f9f9; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: right; }
         .option-card h3 { margin-top: 0; color: var(--main-green); font-size: 1.1rem; }
         .option-card p { font-size: 0.88rem; color: #555; margin-bottom: 12px; }
@@ -43,7 +43,7 @@
         <!-- الخيار الأول: Bing AI -->
         <div class="option-card">
             <h3>1. تحويل الصورة لـ أنمي / كرتون (Bing AI) 🎨</h3>
-            <p>عند الضغط، سيفتح الموقع والوصف (Prompt) جاهز في الخانة. فقط ارفع صورتك واضغط Create.</p>
+            <p>سيعمل الموقع والوصف (Prompt) جاهز في الخانة. فقط ارفع صورتك واضغط Create.</p>
             <button class="action-btn" onclick="openBingCreator()" style="background: #0078d4;">
                 الذهاب للتحويل عبر Bing AI 🚀
             </button>
@@ -51,10 +51,19 @@
 
         <!-- الخيار الثاني: Kling AI -->
         <div class="option-card">
-            <h3>2. تحريك الصورة وإنشاء أنيميشن (Kling AI) 🎬</h3>
+            <h3>2. تحريك الصورة أنيميشن (Kling AI) 🎬</h3>
             <p>سيتم نسخ وصف الحركة تلقائياً وتوجيهك للموقع. ارفع صورتك ثم اعمل Paste للوصف.</p>
             <button class="action-btn" onclick="openKlingAI()" style="background: #ff4757;">
                 الذهاب للتحريك عبر Kling AI ⚡
+            </button>
+        </div>
+
+        <!-- الخيار الثالث: Luma Dream Machine -->
+        <div class="option-card">
+            <h3>3. تحريك سينمائي عالي الجودة (Luma AI) 🌌</h3>
+            <p>موقع سريع وممتاز جداً. سيتم نسخ الوصف، افتح الموقع وارفع صورتك واعمل Paste.</p>
+            <button class="action-btn" onclick="openLumaAI()" style="background: #6c5ce7;">
+                الذهاب للتحريك عبر Luma AI 🌟
             </button>
         </div>
 
@@ -76,6 +85,15 @@
             window.open('https://klingai.com/', '_blank');
         }).catch(() => {
             window.open('https://klingai.com/', '_blank');
+        });
+    }
+
+    function openLumaAI() {
+        navigator.clipboard.writeText(animePrompt).then(() => {
+            alert("تم نسخ وصف الحركة (Prompt) تلقائياً! 📋\nكل ما عليك هو رفع صورتك ولصق (Paste) الوصف في موقع Luma AI.");
+            window.open('https://lumalabs.ai/dream-machine', '_blank');
+        }).catch(() => {
+            window.open('https://lumalabs.ai/dream-machine', '_blank');
         });
     }
 </script>
