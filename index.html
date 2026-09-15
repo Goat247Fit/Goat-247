@@ -1,205 +1,40 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOAT 24/7 - صانع الأنمي والكرتون</title>
-    <style>
-        :root { --main-green: #1b5e20; --accent-green: #25d366; --bg-light: #f4f7f6; --dark: #111; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-light); padding-bottom: 50px; }
+<!-- كارت التوجيه الذكي للمواقع المجانية -->
+<div class="dakji-hero">
+    <h2>تحويل الصورة لأنيميشن كرتون بذكاء اصطناعي مجاني 🚀</h2>
+    <p>اختر المنصة اللي تحب تحول صورتك عليها بنقرة واحدة (الـ Prompt مكتوبة وجاهزة!):</p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
         
-        .navbar { background: white; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
-        .logo-text { font-weight: 900; font-size: 22px; color: var(--main-green); cursor: pointer; }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-btn { padding: 8px 15px; border-radius: 20px; border: none; background: #eee; color: var(--dark); cursor: pointer; font-weight: bold; }
-        .nav-btn.active { background: var(--main-green); color: white; }
+        <!-- خيار 1: Bing Image Creator (Prompt تلقائي) -->
+        <button class="action-btn" onclick="openBingCreator()" style="background: #0078d4;">
+            🎨 التحويل لـ أنمي / كرتون (عبر Bing AI)
+        </button>
 
-        .page-section { display: none; }
-        .page-section.active { display: block; }
+        <!-- خيار 2: Kling AI (نسخ تلقائي للوصف + فتح الموقع) -->
+        <button class="action-btn" onclick="openKlingAI()" style="background: #ff4757;">
+            🎬 تحريك الصورة كرتونياً (عبر Kling AI)
+        </button>
 
-        .dakji-hero { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; border: 2px solid var(--main-green); }
-        .upload-btn { display: inline-block; padding: 14px 28px; background: var(--main-green); color: white; border-radius: 30px; cursor: pointer; font-weight: bold; margin: 15px 0; font-size: 1.1rem; transition: 0.3s; }
-        .upload-btn:hover { background: #134216; }
-        input[type="file"] { display: none; }
-        #preview-area { display: none; margin-top: 15px; }
-        canvas { width: 100%; max-width: 400px; height: auto; border-radius: 10px; background: #0c0d10; }
-        .action-btn { background: var(--accent-green); color: white; border: none; padding: 14px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 1.1rem; }
-        .action-btn:disabled { background: #ccc; cursor: not-allowed; }
-    </style>
-</head>
-<body>
-
-<nav class="navbar">
-    <span class="logo-text">GOAT 24/7</span>
-    <div class="nav-links">
-        <button class="nav-btn active">صانع الكرتون والأنيميشن 🎬</button>
-    </div>
-</nav>
-
-<div id="dakjiPage" class="page-section active">
-    <div class="dakji-hero">
-        <h2>مولد أنيميشن الكوميكس والأنمي ⚡</h2>
-        <p>ارفع أي صورة، وسيتم تطبيق تأثير رسم الكرتون والأنيميشن السينمائي عليها مجاناً!</p>
-
-        <label class="upload-btn">
-            ➕ اختيار صورة
-            <input type="file" id="imageInput" accept="image/*">
-        </label>
-
-        <div id="preview-area">
-            <canvas id="dakjiCanvas" width="1080" height="1080"></canvas>
-            <button id="recordBtn" class="action-btn" onclick="startCartoonAnimation()">إنشاء وتنزيل فيديو الأنمي 🎬</button>
-        </div>
     </div>
 </div>
 
 <script>
-    const imageInput = document.getElementById('imageInput');
-    const previewArea = document.getElementById('preview-area');
-    const canvas = document.getElementById('dakjiCanvas');
-    const ctx = canvas.getContext('2d');
-    const recordBtn = document.getElementById('recordBtn');
-    
-    let userImage = new Image();
-    let cartoonCanvas = document.createElement('canvas');
-    let cartoonCtx = cartoonCanvas.getContext('2d');
+    // الـ Prompt السينمائية الاحترافية لتحويل الصور لـ أنمي بستايل باتمان والكوميكس
+    const animePrompt = "Transform this image into a dark cinematic Batman comic book style anime animation, highly detailed, dramatic lighting, gotham vibe, action pose";
 
-    imageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                userImage.src = event.target.result;
-                userImage.onload = () => {
-                    previewArea.style.display = 'block';
-                    processCartoonStyle(); // معالجة الصورة وتحويلها لستايل كرتوني
-                    renderFrame(1, 0, 0);
-                };
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // فلتر تحويل الصورة لستايل الرسم الكرتوني والكوميكس
-    function processCartoonStyle() {
-        cartoonCanvas.width = userImage.width;
-        cartoonCanvas.height = userImage.height;
-        cartoonCtx.drawImage(userImage, 0, 0);
-
-        let imgData = cartoonCtx.getImageData(0, 0, cartoonCanvas.width, cartoonCanvas.height);
-        let data = imgData.data;
-
-        // تقليل تبغيت الألوان وزيادة التباين لإعطاء مظهر الرسم (Posterize Effect)
-        for (let i = 0; i < data.length; i += 4) {
-            data[i]     = Math.floor(data[i] / 64) * 64;     // Red
-            data[i + 1] = Math.floor(data[i + 1] / 64) * 64; // Green
-            data[i + 2] = Math.floor(data[i + 2] / 64) * 64; // Blue
-        }
-        cartoonCtx.putImageData(imgData, 0, 0);
+    function openBingCreator() {
+        // تمرير الـ Prompt مباشرة في رابط Bing
+        const bingUrl = `https://www.bing.com/images/create?q=${encodeURIComponent(animePrompt)}`;
+        window.open(bingUrl, '_blank');
     }
 
-    function renderFrame(scale, angle, progress) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 1. خلفية أنمي متدرجة ومتحركة (Aura Effect)
-        let gradient = ctx.createRadialGradient(
-            canvas.width/2, canvas.height/2, 50,
-            canvas.width/2, canvas.height/2, canvas.width/2
-        );
-        gradient.addColorStop(0, '#1b5e20');
-        gradient.addColorStop(0.5, '#051f07');
-        gradient.addColorStop(1, '#000000');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // 2. رسم تأثير أشعة الطاقة الكرتونية حول الصورة
-        ctx.save();
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(angle);
-        ctx.strokeStyle = "rgba(37, 211, 102, 0.2)";
-        ctx.lineWidth = 4;
-        for (let i = 0; i < 12; i++) {
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(Math.cos(i * 30 * Math.PI / 180) * 800, Math.sin(i * 30 * Math.PI / 180) * 800);
-            ctx.stroke();
-        }
-        ctx.restore();
-
-        // 3. حساب مقاسات الصورة الكرتونية للسنترة
-        let canvasAspect = canvas.width / canvas.height;
-        let imgAspect = cartoonCanvas.width / cartoonCanvas.height;
-        let renderW, renderH;
-
-        if (imgAspect > canvasAspect) {
-            renderH = canvas.height * 0.85;
-            renderW = renderH * imgAspect;
-        } else {
-            renderW = canvas.width * 0.85;
-            renderH = renderW / imgAspect;
-        }
-
-        // 4. رسم الصورة الكرتونية مع زوم سينمائي ناعم
-        ctx.save();
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.scale(scale, scale);
-
-        // إطار كرتوني سينمائي بارز
-        ctx.shadowColor = "#25d366";
-        ctx.shadowBlur = 25;
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 8;
-        ctx.strokeRect(-renderW / 2, -renderH / 2, renderW, renderH);
-
-        ctx.drawImage(cartoonCanvas, -renderW / 2, -renderH / 2, renderW, renderH);
-        ctx.restore();
-    }
-
-    function startCartoonAnimation() {
-        recordBtn.disabled = true;
-        recordBtn.innerText = "جاري إنشاء وتصدير أنيميشن الكرتون... ⏳";
-
-        const duration = 4000;
-        const stream = canvas.captureStream(30);
-        const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-        let chunks = [];
-
-        recorder.ondataavailable = e => chunks.push(e.data);
-        recorder.onstop = () => {
-            const blob = new Blob(chunks, { type: 'video/webm' });
-            const videoURL = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = videoURL;
-            a.download = 'Cartoon_Anime_Video.webm';
-            a.click();
-
-            recordBtn.disabled = false;
-            recordBtn.innerText = "إنشاء وتنزيل فيديو الأنمي 🎬";
-        };
-
-        recorder.start();
-        let startTime = Date.now();
-
-        function animate() {
-            let elapsed = Date.now() - startTime;
-            let p = elapsed / duration;
-
-            if (p < 1) {
-                let scale = 1 + (p * 0.25); // Dynamic Slow Zoom
-                let angle = p * Math.PI * 2; // دوران أشعة الطاقة الكرتونية
-
-                renderFrame(scale, angle, p);
-                requestAnimationFrame(animate);
-            } else {
-                recorder.stop();
-                renderFrame(1, 0, 0);
-            }
-        }
-
-        animate();
+    function openKlingAI() {
+        // نسخ الـ Prompt تلقائياً وفتح موقع Kling AI
+        navigator.clipboard.writeText(animePrompt).then(() => {
+            alert("تم نسخ وصف الأنمي (Prompt) تلقائياً! 📋\nكل ما عليك هو رفع صورتك ولصق (Paste) الوصف في موقع Kling AI.");
+            window.open('https://klingai.com/', '_blank');
+        }).catch(err => {
+            window.open('https://klingai.com/', '_blank');
+        });
     }
 </script>
-
-</body>
-</html>
