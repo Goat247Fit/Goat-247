@@ -69,7 +69,7 @@
         .upload-btn:hover { background: #134216; }
         input[type="file"] { display: none; }
         #preview-area { display: none; margin-top: 15px; }
-        canvas { width: 100%; max-width: 400px; height: auto; border-radius: 10px; border: 2px solid var(--main-green); background: #000; }
+        canvas { width: 100%; max-width: 400px; height: auto; border-radius: 10px; background: #000; }
         .action-btn { background: var(--accent-green); color: white; border: none; padding: 14px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; font-size: 1.1rem; }
         .action-btn:disabled { background: #ccc; cursor: not-allowed; }
     </style>
@@ -88,7 +88,7 @@
 <div id="dakjiPage" class="page-section active">
     <div class="dakji-hero">
         <h2>صانع فيديو المؤثرات الحركية 🔥</h2>
-        <p>ارفع أي صورة تحبها وسيقوم الموقع بتحويلها فوراً لفيديو ريلز حركي مجاناً!</p>
+        <p>ارفع أي صورة وسيقوم الموقع بتحويلها لمقطع ريلز سينمائي باحترافية!</p>
 
         <label class="upload-btn">
             ➕ إضافة صورة
@@ -96,7 +96,7 @@
         </label>
 
         <div id="preview-area">
-            <canvas id="dakjiCanvas" width="500" height="500"></canvas>
+            <canvas id="dakjiCanvas" width="1080" height="1080"></canvas>
             <button id="recordBtn" class="action-btn" onclick="startCinematicAnimation()">إنشاء وتنزيل الفيديو 🎬</button>
         </div>
     </div>
@@ -335,7 +335,7 @@
 </script>
 
 <script>
-    // DYNAMIC REELS ENGINE (SLAP + IMPACT SHAKE + SLOW-MO ZOOM)
+    // PROFESSIONAL REELS MOTION ENGINE
     const imageInput = document.getElementById('imageInput');
     const previewArea = document.getElementById('preview-area');
     const canvas = document.getElementById('dakjiCanvas');
@@ -351,47 +351,45 @@
                 userImage.src = event.target.result;
                 userImage.onload = () => {
                     previewArea.style.display = 'block';
-                    renderCinematicFrame(1, 0, 0, 0, 0, 0); // المعاينة الثابتة
+                    renderFrame(1, 0, 0, 0); // المعاينة الأساسية
                 };
             };
             reader.readAsDataURL(file);
         }
     });
 
-    function renderCinematicFrame(scale, rotX, rotZ, offsetY, shake, flash) {
+    function renderFrame(scale, rotZ, shake, flash) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // خلفية أنيقة داكنة لربط الألوان
-        ctx.fillStyle = "#0c0d10";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
         ctx.save();
-        
-        // اهتزاز الشاشة القوي عند الاصطدام (Camera Shake Effect)
+
+        // حساب الأبعاد للمحافظة على أبعاد الصورة كاملة بدون مط (Object-Fit: Cover)
+        let canvasAspect = canvas.width / canvas.height;
+        let imgAspect = userImage.width / userImage.height;
+        let renderW, renderH;
+
+        if (imgAspect > canvasAspect) {
+            renderH = canvas.height;
+            renderW = canvas.height * imgAspect;
+        } else {
+            renderW = canvas.width;
+            renderH = canvas.width / imgAspect;
+        }
+
+        // تطبيق اهتزاز الكاميرا الناعم (Shake)
         let shakeX = (Math.random() - 0.5) * shake;
         let shakeY = (Math.random() - 0.5) * shake;
-        ctx.translate(canvas.width / 2 + shakeX, canvas.height / 2 + offsetY + shakeY);
 
-        // التدوير والتكبير في البعد الثالث 3D Transformation
-        let scaleY = Math.cos(rotX);
-        ctx.scale(scale, scale * scaleY);
+        ctx.translate(canvas.width / 2 + shakeX, canvas.height / 2 + shakeY);
+        ctx.scale(scale, scale);
         ctx.rotate(rotZ);
 
-        // رسم الصورة بحدود وتأثير إضاءة أنيق
-        const size = 300;
-        ctx.shadowColor = "#25d366";
-        ctx.shadowBlur = 20;
-        ctx.strokeStyle = "#ffffff";
-        ctx.lineWidth = 6;
-        
-        ctx.beginPath();
-        ctx.rect(-size/2, -size/2, size, size);
-        ctx.stroke();
+        // رسم الصورة
+        ctx.drawImage(userImage, -renderW / 2, -renderH / 2, renderW, renderH);
 
-        ctx.drawImage(userImage, -size/2, -size/2, size, size);
         ctx.restore();
 
-        // الوميض الخاطف للاصطدام (Impact Flash)
+        // الوميض السينمائي الخاطف
         if (flash > 0) {
             ctx.fillStyle = `rgba(255, 255, 255, ${flash})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -400,9 +398,9 @@
 
     function startCinematicAnimation() {
         recordBtn.disabled = true;
-        recordBtn.innerText = "جاري إنشاء وتصدير الفيديو... ⏳";
+        recordBtn.innerText = "جاري جندرة وتصدير الفيديو... ⏳";
 
-        const duration = 5000; // 5 ثواني
+        const duration = 4000; // 4 ثواني مناسبة جداً للريلز
         const stream = canvas.captureStream(30);
         const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
         let chunks = [];
@@ -414,7 +412,7 @@
             
             const a = document.createElement('a');
             a.href = videoURL;
-            a.download = 'Cinematic_Impact_Video.webm';
+            a.download = 'Reels_Cinematic_Video.webm';
             a.click();
 
             recordBtn.disabled = false;
@@ -429,42 +427,27 @@
             let p = elapsed / duration;
 
             if (p < 1) {
-                let scale = 1, rotX = 0, rotZ = 0, offsetY = 0, shake = 0, flash = 0;
+                let scale = 1, rotZ = 0, shake = 0, flash = 0;
 
-                // 1. الدخول والرمية الخاطفة السريعة (0 - 0.8 ثانية)
-                if (p < 0.16) {
-                    let sub = p / 0.16;
-                    offsetY = -350 * (1 - sub);
-                    scale = 2.8 - (1.8 * sub);
-                    rotX = (1 - sub) * 8;
-                    rotZ = (1 - sub) * 4;
+                // 1. دخول خاطف بسعر عالي وديناميكي (0 - 0.5 ثانية)
+                if (p < 0.125) {
+                    let sub = p / 0.125;
+                    scale = 1.4 - (0.3 * sub); // زوم خاطف للداخل
+                    shake = 15 * (1 - sub);
+                    flash = 0.5 * (1 - sub);
                 } 
-                // 2. الاصطدام الخاطف واهتزاز الشاشة الضخم (0.8 - 1.2 ثانية)
-                else if (p < 0.24) {
-                    shake = 40; // هز دقيق وقوي جداً
-                    flash = 0.9; // وميض خاطف
-                    scale = 1.15;
-                } 
-                // 3. الدوران والتقلب في الهواء 3D Flip (1.2 - 2.5 ثانية)
-                else if (p < 0.5) {
-                    let sub = (p - 0.24) / 0.26;
-                    rotX = sub * Math.PI * 2;
-                    rotZ = sub * Math.PI;
-                    scale = 1 + Math.sin(sub * Math.PI) * 0.45;
-                    offsetY = -Math.sin(sub * Math.PI) * 70;
-                } 
-                // 4. الثبات والتقريب السينمائي البطيء Slow-Mo Zoom (2.5 - 5 ثواني)
+                // 2. تقريب سينمائي هادئ جداً مع ميلان خفيف للغاية (0.5 - 4 ثواني)
                 else {
-                    let sub = (p - 0.5) / 0.5;
-                    scale = 1 + (sub * 0.18);
-                    rotZ = Math.sin(sub * 4) * 0.025; // اهتزاز سينمائي هادئ
+                    let sub = (p - 0.125) / 0.875;
+                    scale = 1.1 + (sub * 0.15); // Dynamic Pan Zoom
+                    rotZ = Math.sin(sub * Math.PI) * 0.015; // حركة ميلان بسيطة جداً وغير مزعجة
                 }
 
-                renderCinematicFrame(scale, rotX, rotZ, offsetY, shake, flash);
+                renderFrame(scale, rotZ, shake, flash);
                 requestAnimationFrame(animate);
             } else {
                 recorder.stop();
-                renderCinematicFrame(1, 0, 0, 0, 0, 0);
+                renderFrame(1, 0, 0, 0);
             }
         }
 
