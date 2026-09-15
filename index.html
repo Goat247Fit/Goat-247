@@ -1,40 +1,84 @@
-<!-- كارت التوجيه الذكي للمواقع المجانية -->
-<div class="dakji-hero">
-    <h2>تحويل الصورة لأنيميشن كرتون بذكاء اصطناعي مجاني 🚀</h2>
-    <p>اختر المنصة اللي تحب تحول صورتك عليها بنقرة واحدة (الـ Prompt مكتوبة وجاهزة!):</p>
-
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOAT 24/7 - صانع فيديو الأنمي والكرتون</title>
+    <style>
+        :root { --main-green: #1b5e20; --accent-green: #25d366; --bg-light: #f4f7f6; --dark: #111; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-light); padding-bottom: 50px; }
         
-        <!-- خيار 1: Bing Image Creator (Prompt تلقائي) -->
-        <button class="action-btn" onclick="openBingCreator()" style="background: #0078d4;">
-            🎨 التحويل لـ أنمي / كرتون (عبر Bing AI)
-        </button>
+        .navbar { background: white; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .logo-text { font-weight: 900; font-size: 22px; color: var(--main-green); cursor: pointer; }
+        .nav-links { display: flex; gap: 10px; }
+        .nav-btn { padding: 8px 15px; border-radius: 20px; border: none; background: #eee; color: var(--dark); cursor: pointer; font-weight: bold; }
+        .nav-btn.active { background: var(--main-green); color: white; }
 
-        <!-- خيار 2: Kling AI (نسخ تلقائي للوصف + فتح الموقع) -->
-        <button class="action-btn" onclick="openKlingAI()" style="background: #ff4757;">
-            🎬 تحريك الصورة كرتونياً (عبر Kling AI)
-        </button>
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        .dakji-hero { max-width: 500px; margin: 30px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; border: 2px solid var(--main-green); }
+        .option-card { background: #f9f9f9; border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-top: 15px; text-align: right; }
+        .option-card h3 { margin-top: 0; color: var(--main-green); font-size: 1.1rem; }
+        .option-card p { font-size: 0.88rem; color: #555; margin-bottom: 12px; }
+
+        .action-btn { color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.3s; }
+        .action-btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <span class="logo-text">GOAT 24/7</span>
+    <div class="nav-links">
+        <button class="nav-btn active">مولد الأنمي والكرتون 🎬</button>
+    </div>
+</nav>
+
+<div id="dakjiPage" class="page-section active">
+    <div class="dakji-hero">
+        <h2>صانع فيديو الأنمي والكرتون 🔥</h2>
+        <p>اختر المنصة المناسبة لك لتحويل صورتك إلى أنيميشن كرتوني سينمائي مجاناً 100%:</p>
+
+        <!-- الخيار الأول: Bing AI -->
+        <div class="option-card">
+            <h3>1. تحويل الصورة لـ أنمي / كرتون (Bing AI) 🎨</h3>
+            <p>عند الضغط، سيفتح الموقع والوصف (Prompt) جاهز في الخانة. فقط ارفع صورتك واضغط Create.</p>
+            <button class="action-btn" onclick="openBingCreator()" style="background: #0078d4;">
+                الذهاب للتحويل عبر Bing AI 🚀
+            </button>
+        </div>
+
+        <!-- الخيار الثاني: Kling AI -->
+        <div class="option-card">
+            <h3>2. تحريك الصورة وإنشاء أنيميشن (Kling AI) 🎬</h3>
+            <p>سيتم نسخ وصف الحركة تلقائياً وتوجيهك للموقع. ارفع صورتك ثم اعمل Paste للوصف.</p>
+            <button class="action-btn" onclick="openKlingAI()" style="background: #ff4757;">
+                الذهاب للتحريك عبر Kling AI ⚡
+            </button>
+        </div>
 
     </div>
 </div>
 
 <script>
-    // الـ Prompt السينمائية الاحترافية لتحويل الصور لـ أنمي بستايل باتمان والكوميكس
+    // وصف احترافي للتحويل لستايل باتمان والكوميكس السينمائي
     const animePrompt = "Transform this image into a dark cinematic Batman comic book style anime animation, highly detailed, dramatic lighting, gotham vibe, action pose";
 
     function openBingCreator() {
-        // تمرير الـ Prompt مباشرة في رابط Bing
         const bingUrl = `https://www.bing.com/images/create?q=${encodeURIComponent(animePrompt)}`;
         window.open(bingUrl, '_blank');
     }
 
     function openKlingAI() {
-        // نسخ الـ Prompt تلقائياً وفتح موقع Kling AI
         navigator.clipboard.writeText(animePrompt).then(() => {
-            alert("تم نسخ وصف الأنمي (Prompt) تلقائياً! 📋\nكل ما عليك هو رفع صورتك ولصق (Paste) الوصف في موقع Kling AI.");
+            alert("تم نسخ وصف الحركة (Prompt) تلقائياً! 📋\nكل ما عليك هو رفع صورتك ولصق (Paste) الوصف في موقع Kling AI.");
             window.open('https://klingai.com/', '_blank');
-        }).catch(err => {
+        }).catch(() => {
             window.open('https://klingai.com/', '_blank');
         });
     }
 </script>
+
+</body>
+</html>
